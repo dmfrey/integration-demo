@@ -1,0 +1,18 @@
+logging.level:
+  liquibase: warn
+  org.springframework.integration: debug
+  com.broadcom.springconsulting: debug
+
+spring:
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-test.yaml
+    contexts: test
+
+sftp:
+  server1:
+    name: localhost
+    host: localhost
+    port: 0
+    username: user
+    password: password
+    keyfile: classpath:META-INF/keys/sftp_rsa

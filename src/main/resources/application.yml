@@ -1,0 +1,20 @@
+logging:
+  level:
+    org.springframework.data.jdbc: debug
+    org.springframework.data.jdbc.core.StatementCreatorUtils: trace
+    org.springframework.integration: debug
+    com.broadcom.springconsulting: debug
+
+spring:
+  application:
+    name: integration-demo
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
