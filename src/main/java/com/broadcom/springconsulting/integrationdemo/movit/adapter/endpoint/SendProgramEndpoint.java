@@ -4,6 +4,7 @@ import com.broadcom.springconsulting.integrationdemo.movit.application.port.in.S
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,9 +19,9 @@ class SendProgramEndpoint {
     }
 
     @PostMapping( "/{port}")
-    public ResponseEntity<String> sendProgramToPort( @PathVariable( "port" ) int port ) {
+    public ResponseEntity<String> sendProgramToPort( @PathVariable( "port" ) int port, @RequestParam String filename ) {
 
-        this.sendProgramUseCase.execute( new SendProgramUseCase.SendProgramCommand( port ) );
+        this.sendProgramUseCase.execute( new SendProgramUseCase.SendProgramCommand( port, filename ) );
 
         return ResponseEntity
                 .accepted()

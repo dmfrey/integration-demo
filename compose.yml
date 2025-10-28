@@ -1,0 +1,15 @@
+services:
+  samba:
+    image: crazymax/samba:latest
+    container_name: samba_server
+    environment:
+      TZ: "America/New_York"
+      CONFIG_FILE: ./data/config.yml
+    ports:
+      - "59342:445"
+#      - "59343:139"
+    volumes:
+      - "./samba:/data"
+      - "./build/smb/foo:/samba/foo"
+      - "./build/smb/share:/samba/share"
+    restart: unless-stopped

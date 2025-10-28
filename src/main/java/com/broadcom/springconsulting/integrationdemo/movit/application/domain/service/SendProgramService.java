@@ -24,45 +24,57 @@ class SendProgramService implements SendProgramUseCase {
     private static final Logger log = LoggerFactory.getLogger( SendProgramService.class );
 
     private final GetServerUseCase getServer;
-    private final IntegrationFlow movit;
+    private final IntegrationFlow retrievit;
 
-    SendProgramService( GetServerUseCase getServer, IntegrationFlow movit ) {
+    SendProgramService( GetServerUseCase getServer, IntegrationFlow retrievit ) {
         this.getServer = getServer;
-        this.movit = movit;
+        this.retrievit = retrievit;
     }
 
     @Override
     public void execute( SendProgramCommand command ) {
 
+        var serverGateway = this.getServer.execute( new GetServerUseCase.GetServerQuery( 62281 ) ).get();
+
         this.getServer.execute( new GetServerUseCase.GetServerQuery( command.port() ) )
                 .ifPresentOrElse( gateway -> {
 
 //                    var file = new ClassPathResource( "sample/bbb_sunflower_2160p_60fps_normal.mp4" );
-                    var file = new ClassPathResource( "sample/test-data.csv" );
+//                    var file = new ClassPathResource( "sample/test-data.csv" );
 
-                    try {
+//                    try {
 
-                        var path = Paths.get( file.getFile().getAbsolutePath() );
-                        var bytes = Files.readAllBytes( path );
+//                        var path = Paths.get( file.getFile().getAbsolutePath() );
+//                        var bytes = Files.readAllBytes( path );
 
                         var message =
                                 MessageBuilder
-                                        .withPayload( file.getInputStream() )
+                                        .withPayload( serverGateway.remoteDirectory() + command.filename() )
+//                                        .setHeader( "file_name", file.getFilename() )
+                                        .setHeader( "file_name", command.filename() )
                                         .setHeader( "send-channel", gateway.connectionType() )
+                                        .setHeader( "name", gateway.name() )
                                         .setHeader( "host", gateway.hostname() )
                                         .setHeader( "port", gateway.port() )
                                         .setHeader( "user", gateway.username() )
                                         .setHeader( "password", gateway.password() )
                                         .setHeader( "remoteDirectory", gateway.remoteDirectory() )
+                                        .setHeader( "retrieve-channel", serverGateway.connectionType() )
+                                        .setHeader( "server_name", serverGateway.name() )
+                                        .setHeader( "server_host", serverGateway.hostname() )
+                                        .setHeader( "server_port", serverGateway.port() )
+                                        .setHeader( "server_user", serverGateway.username() )
+                                        .setHeader( "server_password", serverGateway.password() )
+                                        .setHeader( "server_remoteDirectory", serverGateway.remoteDirectory() )
                                         .build();
 
-                        Objects.requireNonNull( this.movit.getInputChannel() ).send( message );
+                        Objects.requireNonNull( this.retrievit.getInputChannel() ).send( message );
 
-                    } catch( IOException e ) {
-                        log.error( "Error reading file", e );
-
-                        throw new RuntimeException( e );
-                    }
+//                    } catch( IOException e ) {
+//                        log.error( "Error reading file", e );
+//
+//                        throw new RuntimeException( e );
+//                    }
 
                 },
                         () -> { throw new RuntimeException( "Gateway not found!" ); }

@@ -1,9 +1,16 @@
 logging.level:
+  jcifs: debug
   liquibase: warn
   org.springframework.integration: debug
   com.broadcom.springconsulting: debug
 
 spring:
+
+  docker:
+    compose:
+      skip:
+        in-tests: false
+
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-test.yaml
     contexts: test

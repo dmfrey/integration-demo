@@ -39,9 +39,9 @@ public class EmbeddedSftpServer implements InitializingBean, SmartLifecycle {
 
     private volatile int port;
 
-    private volatile boolean running;
+    private volatile String directory = BUILD;
 
-    private DefaultSftpSessionFactory defaultSftpSessionFactory;
+    private volatile boolean running;
 
     public void setName( String name ) {
 
@@ -55,9 +55,9 @@ public class EmbeddedSftpServer implements InitializingBean, SmartLifecycle {
 
     }
 
-    public void setDefaultSftpSessionFactory( DefaultSftpSessionFactory defaultSftpSessionFactory ) {
+    public void setDirectory( String directory ) {
 
-        this.defaultSftpSessionFactory = defaultSftpSessionFactory;
+        this.directory = directory;
 
     }
 
@@ -69,7 +69,7 @@ public class EmbeddedSftpServer implements InitializingBean, SmartLifecycle {
         this.server.setPort( this.port );
         this.server.setKeyPairProvider( new SimpleGeneratorHostKeyProvider( new File( "hostkey.ser" ).toPath() ) );
         this.server.setSubsystemFactories( Collections.singletonList( new SftpSubsystemFactory() ) );
-        final String pathname = BUILD + File.separator + name;
+        final String pathname = directory + File.separator + name;
         new File( pathname ).mkdirs();
         this.server.setFileSystemFactory( new VirtualFileSystemFactory( Paths.get( pathname ) ) );
 
@@ -100,7 +100,6 @@ public class EmbeddedSftpServer implements InitializingBean, SmartLifecycle {
         try {
 
             this.server.start();
-//            this.defaultSftpSessionFactory.setPort( this.server.getPort() );
             this.running = true;
 
             log.info( "SFTP server '{}' started on port [{}]", name,  this.server.getPort() );

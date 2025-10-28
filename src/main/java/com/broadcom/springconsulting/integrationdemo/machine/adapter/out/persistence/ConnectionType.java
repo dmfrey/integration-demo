@@ -3,5 +3,6 @@ package com.broadcom.springconsulting.integrationdemo.machine.adapter.out.persis
 public enum ConnectionType {
     FTP,
     SFTP,
+    SMB,
     TCP
 }
