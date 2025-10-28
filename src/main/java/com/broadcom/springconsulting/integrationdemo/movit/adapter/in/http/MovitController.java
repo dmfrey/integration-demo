@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping( "/movit" )
-public class MovitController {
+class MovitController {
 
     private final PrepareRequestDownloadUseCase prepareRequestDownloadUseCase;
     private final SendProgramUseCase sendProgramUseCase;
