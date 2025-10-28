@@ -4,6 +4,6 @@ public interface SendProgramUseCase {
 
     void execute( SendProgramCommand command );
 
-    record SendProgramCommand( Integer port, String filename ) { }
+    record SendProgramCommand( Integer port, String filename, Integer serverPort ) { }
 
 }

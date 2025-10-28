@@ -1,4 +1,4 @@
-package com.broadcom.springconsulting.integrationdemo.movit.adapter.endpoint;
+package com.broadcom.springconsulting.integrationdemo.movit.adapter.in.endpoint;
 
 import com.broadcom.springconsulting.integrationdemo.movit.application.port.in.SendProgramUseCase;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +19,9 @@ class SendProgramEndpoint {
     }
 
     @PostMapping( "/{port}")
-    public ResponseEntity<String> sendProgramToPort( @PathVariable( "port" ) int port, @RequestParam String filename ) {
+    public ResponseEntity<String> sendProgramToPort( @PathVariable( "port" ) int port, @RequestParam String filename, @RequestParam Integer serverPort ) {
 
-        this.sendProgramUseCase.execute( new SendProgramUseCase.SendProgramCommand( port, filename ) );
+        this.sendProgramUseCase.execute( new SendProgramUseCase.SendProgramCommand( port, filename, serverPort ) );
 
         return ResponseEntity
                 .accepted()

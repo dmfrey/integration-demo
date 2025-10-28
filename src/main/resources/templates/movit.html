@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Movit</title>
+</head>
+<body>
+
+    <h1>Movit Download Request</h1>
+
+    <form action="#" th:action="@{/movit/submit}" th:object="${movitForm}" method="post">
+        <div>
+            <label for="serverPort">Server:</label>
+            <select id="serverPort" th:field="*{serverPort}">
+                <option value="">-- Select Server --</option>
+                <option th:each="server : ${servers}" th:value="${server.port}" th:text="${server.name}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="filename">Filename:</label>
+            <input id="filename" type="text" th:field="*{filename}" />
+        </div>
+        <div>
+            <label for="gatewayPort">Gateway:</label>
+            <select id="gatewayPort" th:field="*{gatewayPort}">
+                <option value="">-- Select Gateway --</option>
+                <option th:each="gateway : ${gateways}" th:value="${gateway.port}" th:text="${gateway.name}"></option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+    <p><span th:text="${message}"></span></p>
+
+</body>
+</html>

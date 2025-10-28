@@ -3,13 +3,16 @@ package com.broadcom.springconsulting.integrationdemo.machine.application.port.o
 import com.broadcom.springconsulting.integrationdemo.machine.application.domain.model.Gateway;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GatewayPort {
 
-    List<Gateway> findAllServers();
+    List<Gateway> findAllInboundServers();
+
+    List<Gateway> findAllOutboundGateways();
 
     Gateway findByPort( Integer port );
 
-    Gateway updateGateway( Gateway gateway );
+    Optional<Gateway> updateGateway( Gateway gateway );
 
 }

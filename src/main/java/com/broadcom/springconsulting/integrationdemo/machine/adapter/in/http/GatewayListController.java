@@ -1,6 +1,6 @@
 package com.broadcom.springconsulting.integrationdemo.machine.adapter.in.http;
 
-import com.broadcom.springconsulting.integrationdemo.machine.application.port.in.GetAllServersUseCase;
+import com.broadcom.springconsulting.integrationdemo.machine.application.port.in.GetAllGatewayUseCase;
 import com.broadcom.springconsulting.integrationdemo.machine.application.port.in.UpdateGatewayUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,33 +9,36 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 class GatewayListController {
 
-    private final GetAllServersUseCase getAllServersUseCase;
+    private final GetAllGatewayUseCase getAllGatewayUseCase;
     private final UpdateGatewayUseCase updateGatewayUseCase;
 
-    public GatewayListController(GetAllServersUseCase getAllServersUseCase,
-                                 UpdateGatewayUseCase updateGatewayUseCase) {
-        this.getAllServersUseCase = getAllServersUseCase;
+    public GatewayListController( GetAllGatewayUseCase getAllGatewayUseCase,
+                                 UpdateGatewayUseCase updateGatewayUseCase ) {
+        this.getAllGatewayUseCase = getAllGatewayUseCase;
         this.updateGatewayUseCase = updateGatewayUseCase;
     }
 
-    @GetMapping("/")
-    public String viewHomePage(Model model) {
+    @GetMapping( "/" )
+    public String viewHomePage( Model model ) {
 
-        var gateways = getAllServersUseCase.execute(
-                new GetAllServersUseCase.GetAllServersCommand()
+        var gateways = this.getAllGatewayUseCase.execute(
+                new GetAllGatewayUseCase.GetAllGatewaysCommand()
         );
         model.addAttribute("gateways", gateways);
+
         return "index";
     }
 
-    @PostMapping("/gateways/{id}/edit")
+    @PostMapping( "/gateways/{id}" )
     public ResponseEntity<?> editGateway(
             @PathVariable Long id,
             @RequestParam("name") String name,
+            @RequestParam("connectionDirection") String connectionDirection,
             @RequestParam("connectionType") String connectionType,
             @RequestParam("hostname") String hostname,
             @RequestParam("port") Integer port,
@@ -44,10 +47,11 @@ class GatewayListController {
             @RequestParam("remoteDirectory") String remoteDirectory
     ) {
 
-        updateGatewayUseCase.execute(
-                new UpdateGatewayUseCase.UpdateGatewayRecord(
+        return updateGatewayUseCase.execute(
+                new UpdateGatewayUseCase.UpdateGatewayCommand(
                         id,
                         name,
+                        connectionDirection,
                         connectionType,
                         hostname,
                         port,
@@ -55,9 +59,13 @@ class GatewayListController {
                         password,
                         remoteDirectory
                 )
-        );
-
-        return ResponseEntity.accepted().build();
+        )
+                .map( gateway ->
+                        ResponseEntity.accepted()
+                                .location( ServletUriComponentsBuilder.fromCurrentRequest().path( "/{id}" ).buildAndExpand( gateway.id() ).toUri() )
+                                .build()
+                )
+                .orElse( ResponseEntity.badRequest().build() );
     }
 
 }

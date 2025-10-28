@@ -19,6 +19,10 @@ record GatewayEntity(
         @Size( max = 200 )
         String name,
 
+        @Column( "connection_direction" )
+        @NotNull
+        ConnectionDirection connectionDirection,
+
         @Column( "connection_type" )
         @NotNull
         ConnectionType connectionType,

@@ -14,6 +14,7 @@
     <tr>Type</tr>
     <tr>Hostname</tr>
     <tr>Port</tr>
+    <tr>Remote Directory</tr>
     </thead>
     <tr th:each="gateway : ${gateways}">
         <td th:text="${gateway.id}"></td>
@@ -21,6 +22,7 @@
         <td th:text="${gateway.connectionType}"></td>
         <td th:text="${gateway.hostname}"></td>
         <td th:text="${gateway.port}"></td>
+        <td th:text="${gateway.remoteDirectory}"></td>
     </tr>
 </table>
 

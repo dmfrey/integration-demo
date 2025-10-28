@@ -4,6 +4,7 @@ public record Gateway(
 
         Long id,
         String name,
+        String connectionDirection,
         String connectionType,
         String hostname,
         Integer port,

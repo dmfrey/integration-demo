@@ -1,8 +1,6 @@
 package com.broadcom.springconsulting.integrationdemo.machine.adapter.out.persistence;
 
-enum ConnectionType {
-    FTP,
-    SFTP,
-    SMB,
-    TCP
+enum ConnectionDirection {
+    INBOUND,
+    OUTBOUND
 }

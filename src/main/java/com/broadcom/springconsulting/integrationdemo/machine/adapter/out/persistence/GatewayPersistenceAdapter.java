@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Repository
@@ -21,9 +22,19 @@ class GatewayPersistenceAdapter implements GatewayPort {
     }
 
     @Override
-    public List<Gateway> findAllServers() {
+    public List<Gateway> findAllInboundServers() {
 
-        var results = this.gatewayRepository.findAll();
+        var results = this.gatewayRepository.findAllInboundServers();
+
+        return StreamSupport.stream( results.spliterator(), false )
+                .map( this::fromEntity )
+                .toList();
+    }
+
+    @Override
+    public List<Gateway> findAllOutboundGateways() {
+
+        var results = this.gatewayRepository.findAllOutboundGateways();
 
         return StreamSupport.stream( results.spliterator(), false )
                 .map( this::fromEntity )
@@ -39,10 +50,12 @@ class GatewayPersistenceAdapter implements GatewayPort {
     }
 
     @Override
-    public Gateway updateGateway(Gateway gateway) {
-        var entity = toEntity(gateway);
-        var savedEntity = this.gatewayRepository.save(entity);
-        return fromEntity(savedEntity); // is this important?
+    public Optional<Gateway> updateGateway( Gateway gateway ) {
+
+        var updated = this.gatewayRepository.save( toEntity( gateway ) );
+
+        return Optional.of( updated )
+                .map( this::fromEntity );
     }
 
     private Gateway fromEntity(GatewayEntity entity) {
@@ -50,6 +63,7 @@ class GatewayPersistenceAdapter implements GatewayPort {
         return new Gateway(
                 entity.id(),
                 entity.name(),
+                entity.connectionDirection().name(),
                 entity.connectionType().name(),
                 entity.serverHostname(),
                 entity.port(),
@@ -59,12 +73,13 @@ class GatewayPersistenceAdapter implements GatewayPort {
         );
     }
 
-    private GatewayEntity toEntity(Gateway gateway) {
+    private GatewayEntity toEntity( Gateway gateway ) {
 
         return new GatewayEntity(
                 gateway.id(),
                 gateway.name(),
-                ConnectionType.valueOf(gateway.connectionType()),
+                ConnectionDirection.valueOf( gateway.connectionDirection() ),
+                ConnectionType.valueOf( gateway.connectionType() ),
                 gateway.hostname(),
                 gateway.port(),
                 gateway.username(),
