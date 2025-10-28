@@ -10,4 +10,6 @@ public interface GatewayPort {
 
     Gateway findByPort( Integer port );
 
+    Gateway updateGateway( Gateway gateway );
+
 }

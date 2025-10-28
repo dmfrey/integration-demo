@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Servers</title>
+</head>
+<body>
+<h1 th:text="${pageTitle}">Integration Demo</h1>
+
+<h2>Server List:</h2>
+<table>
+    <thead>
+    <tr>Name</tr>
+    <tr>Type</tr>
+    <tr>Hostname</tr>
+    <tr>Port</tr>
+    </thead>
+    <tr th:each="gateway : ${gateways}">
+        <td th:text="${gateway.id}"></td>
+        <td th:text="${gateway.name}"></td>
+        <td th:text="${gateway.connectionType}"></td>
+        <td th:text="${gateway.hostname}"></td>
+        <td th:text="${gateway.port}"></td>
+    </tr>
+</table>
+
+<p>SPeL test: <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span></p>
+</body>
+</html>

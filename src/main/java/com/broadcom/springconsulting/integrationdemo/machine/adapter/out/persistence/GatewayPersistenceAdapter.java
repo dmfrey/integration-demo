@@ -38,7 +38,14 @@ class GatewayPersistenceAdapter implements GatewayPort {
                 .orElse( null );
     }
 
-    private Gateway fromEntity( GatewayEntity entity ) {
+    @Override
+    public Gateway updateGateway(Gateway gateway) {
+        var entity = toEntity(gateway);
+        var savedEntity = this.gatewayRepository.save(entity);
+        return fromEntity(savedEntity); // is this important?
+    }
+
+    private Gateway fromEntity(GatewayEntity entity) {
 
         return new Gateway(
                 entity.id(),
@@ -52,4 +59,18 @@ class GatewayPersistenceAdapter implements GatewayPort {
         );
     }
 
+    private GatewayEntity toEntity(Gateway gateway) {
+
+        return new GatewayEntity(
+                gateway.id(),
+                gateway.name(),
+                ConnectionType.valueOf(gateway.connectionType()),
+                gateway.hostname(),
+                gateway.port(),
+                gateway.username(),
+                gateway.password(),
+                gateway.remoteDirectory()
+        );
+
+    }
 }
