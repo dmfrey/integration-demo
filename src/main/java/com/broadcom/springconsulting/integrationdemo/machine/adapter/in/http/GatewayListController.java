@@ -1,7 +1,8 @@
-package com.broadcom.springconsulting.integrationdemo.movit.web.controller;
+package com.broadcom.springconsulting.integrationdemo.machine.adapter.in.http;
 
 import com.broadcom.springconsulting.integrationdemo.machine.application.port.in.GetAllServersUseCase;
 import com.broadcom.springconsulting.integrationdemo.machine.application.port.in.UpdateGatewayUseCase;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class GatewayListController {
+class GatewayListController {
 
     private final GetAllServersUseCase getAllServersUseCase;
     private final UpdateGatewayUseCase updateGatewayUseCase;
@@ -32,7 +33,7 @@ public class GatewayListController {
     }
 
     @PostMapping("/gateways/{id}/edit")
-    public String editGateway(
+    public ResponseEntity<?> editGateway(
             @PathVariable Long id,
             @RequestParam("name") String name,
             @RequestParam("connectionType") String connectionType,
@@ -41,24 +42,22 @@ public class GatewayListController {
             @RequestParam("username") String username,
             @RequestParam("password") String password,
             @RequestParam("remoteDirectory") String remoteDirectory
-            ) {
-        try {
-            updateGatewayUseCase.execute(
-                    new UpdateGatewayUseCase.UpdateGatewayRecord(
-                            id,
-                            name,
-                            connectionType,
-                            hostname,
-                            port,
-                            username,
-                            password,
-                            remoteDirectory
-                    )
-            );
-        } catch (Exception ex) {
-            return "Damn!";
-        }
+    ) {
 
-        return "OK!";
+        updateGatewayUseCase.execute(
+                new UpdateGatewayUseCase.UpdateGatewayRecord(
+                        id,
+                        name,
+                        connectionType,
+                        hostname,
+                        port,
+                        username,
+                        password,
+                        remoteDirectory
+                )
+        );
+
+        return ResponseEntity.accepted().build();
     }
+
 }
