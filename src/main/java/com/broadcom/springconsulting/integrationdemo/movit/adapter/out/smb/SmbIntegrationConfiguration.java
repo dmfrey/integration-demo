@@ -1,7 +1,7 @@
 package com.broadcom.springconsulting.integrationdemo.movit.adapter.out.smb;
 
+import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.MachineInterfaceHeaders;
 import jcifs.DialectVersion;
-import org.apache.naming.factory.BeanFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ class SmbIntegrationConfiguration {
         @Override
         protected Collection<MessageChannel> determineTargetChannels( Message<?> message ) {
 
-            var hostPortFlow = message.getHeaders().get("host", String.class ) + message.getHeaders().get( "port" ) + ".flow";
+            var hostPortFlow = message.getHeaders().get(MachineInterfaceHeaders.HOST, String.class ) + message.getHeaders().get( MachineInterfaceHeaders.PORT ) + ".flow";
 
             if( this.flowContext.getRegistry().containsKey( hostPortFlow ) ) {
                 log.debug( "Retrieving existing TCP channel: [{}]", hostPortFlow );
@@ -60,12 +60,12 @@ class SmbIntegrationConfiguration {
 
         private IntegrationFlowContext.IntegrationFlowRegistration createNewSubflow( Message<?> message ) {
 
-            var name = (String) message.getHeaders().get( "name" );
-            var host = (String) message.getHeaders().get( "host" );
-            var port = (Integer) message.getHeaders().get( "port" );
-            var user = (String) message.getHeaders().get( "user" );
-            var password = (String) message.getHeaders().get( "password" );
-            var remoteDirectory = (String) message.getHeaders().get( "remoteDirectory" );
+            var name = (String) message.getHeaders().get( MachineInterfaceHeaders.NAME );
+            var host = (String) message.getHeaders().get( MachineInterfaceHeaders.HOST );
+            var port = (Integer) message.getHeaders().get( MachineInterfaceHeaders.PORT );
+            var user = (String) message.getHeaders().get( MachineInterfaceHeaders.USER );
+            var password = (String) message.getHeaders().get( MachineInterfaceHeaders.PASSWORD );
+            var remoteDirectory = (String) message.getHeaders().get( MachineInterfaceHeaders.REMOTE_DIRECTORY );
 
             Assert.state(host != null && port != null && user != null && password != null && remoteDirectory != null, "smb connection details missing" );
 

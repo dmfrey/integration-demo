@@ -1,10 +1,13 @@
 package com.broadcom.springconsulting.integrationdemo.movit.application.domain.service;
 
 import com.broadcom.springconsulting.integrationdemo.machineinterface.application.port.in.FindMachineInterfaceByPortUseCase;
+import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.MachineInterfaceHeaders;
+import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.ServerHeaders;
 import com.broadcom.springconsulting.integrationdemo.movit.application.port.in.SendProgramUseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.file.FileHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
@@ -34,21 +37,21 @@ class SendProgramService implements SendProgramUseCase {
                         var message =
                                 MessageBuilder
                                         .withPayload( serverGateway.remoteDirectory() + command.filename() )
-                                        .setHeader( "file_name", command.filename() )
+                                        .setHeader( FileHeaders.FILENAME, command.filename() )
                                         .setHeader( "send-channel", gateway.connectionType() )
-                                        .setHeader( "name", gateway.name() )
-                                        .setHeader( "host", gateway.hostname() )
-                                        .setHeader( "port", gateway.port() )
-                                        .setHeader( "user", gateway.username() )
-                                        .setHeader( "password", gateway.password() )
-                                        .setHeader( "remoteDirectory", gateway.remoteDirectory() )
+                                        .setHeader( MachineInterfaceHeaders.NAME, gateway.name() )
+                                        .setHeader( MachineInterfaceHeaders.HOST, gateway.hostname() )
+                                        .setHeader( MachineInterfaceHeaders.PORT, gateway.port() )
+                                        .setHeader( MachineInterfaceHeaders.USER, gateway.username() )
+                                        .setHeader( MachineInterfaceHeaders.PASSWORD, gateway.password() )
+                                        .setHeader( MachineInterfaceHeaders.REMOTE_DIRECTORY, gateway.remoteDirectory() )
                                         .setHeader( "retrieve-channel", serverGateway.connectionType() )
-                                        .setHeader( "server_name", serverGateway.name() )
-                                        .setHeader( "server_host", serverGateway.hostname() )
-                                        .setHeader( "server_port", serverGateway.port() )
-                                        .setHeader( "server_user", serverGateway.username() )
-                                        .setHeader( "server_password", serverGateway.password() )
-                                        .setHeader( "server_remoteDirectory", serverGateway.remoteDirectory() )
+                                        .setHeader( ServerHeaders.NAME, serverGateway.name() )
+                                        .setHeader( ServerHeaders.HOST, serverGateway.hostname() )
+                                        .setHeader( ServerHeaders.PORT, serverGateway.port() )
+                                        .setHeader( ServerHeaders.USER, serverGateway.username() )
+                                        .setHeader( ServerHeaders.PASSWORD, serverGateway.password() )
+                                        .setHeader( ServerHeaders.REMOTE_DIRECTORY, serverGateway.remoteDirectory() )
                                         .build();
 
                         Objects.requireNonNull( this.retrievit.getInputChannel() ).send( message );

@@ -1,5 +1,6 @@
 package com.broadcom.springconsulting.integrationdemo.movit.adapter.out.sftp;
 
+import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.ServerHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ class SftpIntegrationConfiguration {
         @Override
         protected Collection<MessageChannel> determineTargetChannels(Message<?> message ) {
 
-            var hostPortFlow = message.getHeaders().get("host", String.class ) + message.getHeaders().get( "port" ) + ".flow";
+            var hostPortFlow = message.getHeaders().get( ServerHeaders.HOST, String.class ) + message.getHeaders().get( ServerHeaders.PORT ) + ".flow";
 
             if( this.flowContext.getRegistry().containsKey( hostPortFlow ) ) {
                 log.debug( "Retrieving existing SFTP channel: [{}]", hostPortFlow );
@@ -56,11 +57,11 @@ class SftpIntegrationConfiguration {
 
         private IntegrationFlowContext.IntegrationFlowRegistration createNewSubflow( Message<?> message ) {
 
-            var host = (String) message.getHeaders().get( "host" );
-            var port = (Integer) message.getHeaders().get( "port" );
-            var user = (String) message.getHeaders().get( "user" );
-            var password = (String) message.getHeaders().get( "password" );
-            var remoteDirectory = (String) message.getHeaders().get( "remoteDirectory" );
+            var host = (String) message.getHeaders().get( ServerHeaders.HOST );
+            var port = (Integer) message.getHeaders().get( ServerHeaders.PORT );
+            var user = (String) message.getHeaders().get( ServerHeaders.USER );
+            var password = (String) message.getHeaders().get( ServerHeaders.PASSWORD );
+            var remoteDirectory = (String) message.getHeaders().get( ServerHeaders.REMOTE_DIRECTORY );
 
             Assert.state(host != null && port != null && user != null && password != null && remoteDirectory != null, "sft connection details missing" );
 

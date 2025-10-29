@@ -1,5 +1,6 @@
 package com.broadcom.springconsulting.integrationdemo.movit.adapter.out.tcp;
 
+import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.MachineInterfaceHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ class TcpIntegrationConfiguration {
         @Override
         protected Collection<MessageChannel> determineTargetChannels( Message<?> message ) {
 
-            var hostPortFlow = message.getHeaders().get("host", String.class ) + message.getHeaders().get( "port" ) + ".flow";
+            var hostPortFlow = message.getHeaders().get(MachineInterfaceHeaders.HOST, String.class ) + message.getHeaders().get( MachineInterfaceHeaders.PORT ) + ".flow";
 
             if( this.flowContext.getRegistry().containsKey( hostPortFlow ) ) {
                 log.debug( "Retrieving existing TCP channel: [{}]", hostPortFlow );
@@ -57,8 +58,8 @@ class TcpIntegrationConfiguration {
 
         private IntegrationFlowContext.IntegrationFlowRegistration createNewSubflow( Message<?> message ) {
 
-            var host = (String) message.getHeaders().get( "host" );
-            var port = (Integer) message.getHeaders().get( "port" );
+            var host = (String) message.getHeaders().get( MachineInterfaceHeaders.HOST );
+            var port = (Integer) message.getHeaders().get( MachineInterfaceHeaders.PORT );
 
             Assert.state(host != null && port != null, "tcp host and port are required!" );
 
