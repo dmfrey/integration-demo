@@ -9,7 +9,7 @@
 
     <div id="container">
 
-        <h1 th:text="${pageTitle}">Integration Demo</h1>
+        <h1 th:text="${pageTitle}">Machine Interfaces</h1>
 
         <h2>Server List:</h2>
         <table>
@@ -23,13 +23,13 @@
                     <th>Remote Directory</th>
                 </tr>
             </thead>
-            <tr th:each="gateway : ${gateways}">
-                <td th:text="${gateway.id}"></td>
-                <td th:text="${gateway.name}"></td>
-                <td th:text="${gateway.connectionType}"></td>
-                <td th:text="${gateway.hostname}"></td>
-                <td th:text="${gateway.port}"></td>
-                <td th:text="${gateway.remoteDirectory}"></td>
+            <tr th:each="mi : ${machineInterfaces}">
+                <td th:text="${mi.id}"></td>
+                <td th:text="${mi.name}"></td>
+                <td th:text="${mi.connectionType}"></td>
+                <td th:text="${mi.hostname}"></td>
+                <td th:text="${mi.port}"></td>
+                <td th:text="${mi.remoteDirectory}"></td>
             </tr>
         </table>
 

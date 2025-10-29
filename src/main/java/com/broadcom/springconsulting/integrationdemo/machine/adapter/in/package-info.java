@@ -1,1 +1,0 @@
-package com.broadcom.springconsulting.integrationdemo.machine.adapter.in;

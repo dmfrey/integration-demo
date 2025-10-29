@@ -24,8 +24,8 @@
                 <input id="filename" type="text" th:field="*{filename}" />
             </div>
             <div class="form-group">
-                <label for="gatewayPort">Gateway:</label>
-                <select id="gatewayPort" th:field="*{gatewayPort}">
+                <label for="findAllInboundMachineInterfacesPort">Gateway:</label>
+                <select id="findAllInboundMachineInterfacesPort" th:field="*{gatewayPort}">
                     <option value="">-- Select Gateway --</option>
                     <option th:each="gateway : ${gateways}" th:value="${gateway.port}" th:text="${gateway.name}"></option>
                 </select>

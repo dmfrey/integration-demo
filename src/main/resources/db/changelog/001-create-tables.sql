@@ -1,4 +1,4 @@
-create table gateway (
+create table machine_interface (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(200) not null,
     connection_direction VARCHAR(10) not null,

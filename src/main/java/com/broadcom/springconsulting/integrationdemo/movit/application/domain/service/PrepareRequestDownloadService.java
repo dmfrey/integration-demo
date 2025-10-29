@@ -1,7 +1,7 @@
 package com.broadcom.springconsulting.integrationdemo.movit.application.domain.service;
 
-import com.broadcom.springconsulting.integrationdemo.machine.application.port.in.GetAllGatewayUseCase;
-import com.broadcom.springconsulting.integrationdemo.machine.application.port.in.GetAllServersUseCase;
+import com.broadcom.springconsulting.integrationdemo.machineinterface.application.port.in.GetAllOutboundMachineInterfacesUseCase;
+import com.broadcom.springconsulting.integrationdemo.machineinterface.application.port.in.GetAllInboundMachineInterfacesUseCase;
 import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.Gateway;
 import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.Server;
 import com.broadcom.springconsulting.integrationdemo.movit.application.port.in.PrepareRequestDownloadUseCase;
@@ -12,23 +12,23 @@ import java.util.Map;
 @Component
 class PrepareRequestDownloadService implements PrepareRequestDownloadUseCase {
 
-    private final GetAllServersUseCase getAllServersUseCase;
-    private final GetAllGatewayUseCase getAllGatewayUseCase;
+    private final GetAllInboundMachineInterfacesUseCase getAllInboundMachineInterfacesUseCase;
+    private final GetAllOutboundMachineInterfacesUseCase getAllOutboundMachineInterfacesUseCase;
 
-    PrepareRequestDownloadService( GetAllServersUseCase getAllServersUseCase, GetAllGatewayUseCase getAllGatewayUseCase ) {
+    PrepareRequestDownloadService(GetAllInboundMachineInterfacesUseCase getAllInboundMachineInterfacesUseCase, GetAllOutboundMachineInterfacesUseCase getAllOutboundMachineInterfacesUseCase) {
 
-        this.getAllServersUseCase = getAllServersUseCase;
-        this.getAllGatewayUseCase = getAllGatewayUseCase;
+        this.getAllInboundMachineInterfacesUseCase = getAllInboundMachineInterfacesUseCase;
+        this.getAllOutboundMachineInterfacesUseCase = getAllOutboundMachineInterfacesUseCase;
 
     }
 
     @Override
     public Map<String, Object> execute(PrepareRequestDownloadCommand command) {
 
-        var servers = this.getAllServersUseCase.execute( new GetAllServersUseCase.GetAllServersCommand() ).stream()
-                .map( server -> new Server( server.name(), server.port() ) );
-        var gateways = this.getAllGatewayUseCase.execute( new GetAllGatewayUseCase.GetAllGatewaysCommand() ).stream()
-                .map( gateway -> new Gateway( gateway.name(), gateway.port() ) );
+        var servers = this.getAllInboundMachineInterfacesUseCase.execute( new GetAllInboundMachineInterfacesUseCase.GetAllInboundMachineInterfacesCommand() ).stream()
+                .map( mi -> new Server( mi.name(), mi.port() ) );
+        var gateways = this.getAllOutboundMachineInterfacesUseCase.execute( new GetAllOutboundMachineInterfacesUseCase.GetAllOutboundMachineInterfacesCommand() ).stream()
+                .map( mi -> new Gateway( mi.name(), mi.port() ) );
 
         return Map.of( "servers", servers, "gateways", gateways );
     }
