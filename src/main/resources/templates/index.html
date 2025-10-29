@@ -3,29 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Servers</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1 th:text="${pageTitle}">Integration Demo</h1>
 
-<h2>Server List:</h2>
-<table>
-    <thead>
-    <tr>Name</tr>
-    <tr>Type</tr>
-    <tr>Hostname</tr>
-    <tr>Port</tr>
-    <tr>Remote Directory</tr>
-    </thead>
-    <tr th:each="gateway : ${gateways}">
-        <td th:text="${gateway.id}"></td>
-        <td th:text="${gateway.name}"></td>
-        <td th:text="${gateway.connectionType}"></td>
-        <td th:text="${gateway.hostname}"></td>
-        <td th:text="${gateway.port}"></td>
-        <td th:text="${gateway.remoteDirectory}"></td>
-    </tr>
-</table>
+    <div id="container">
 
-<p>SPeL test: <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span></p>
+        <h1 th:text="${pageTitle}">Integration Demo</h1>
+
+        <h2>Server List:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Hostname</th>
+                    <th>Port</th>
+                    <th>Remote Directory</th>
+                </tr>
+            </thead>
+            <tr th:each="gateway : ${gateways}">
+                <td th:text="${gateway.id}"></td>
+                <td th:text="${gateway.name}"></td>
+                <td th:text="${gateway.connectionType}"></td>
+                <td th:text="${gateway.hostname}"></td>
+                <td th:text="${gateway.port}"></td>
+                <td th:text="${gateway.remoteDirectory}"></td>
+            </tr>
+        </table>
+
+        <p>SPeL test: <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span></p>
+
+    </div>
+
 </body>
 </html>
