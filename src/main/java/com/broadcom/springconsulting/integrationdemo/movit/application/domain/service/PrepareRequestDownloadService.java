@@ -2,7 +2,7 @@ package com.broadcom.springconsulting.integrationdemo.movit.application.domain.s
 
 import com.broadcom.springconsulting.integrationdemo.machineinterface.application.port.in.GetAllOutboundMachineInterfacesUseCase;
 import com.broadcom.springconsulting.integrationdemo.machineinterface.application.port.in.GetAllInboundMachineInterfacesUseCase;
-import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.Gateway;
+import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.MachineInterface;
 import com.broadcom.springconsulting.integrationdemo.movit.application.domain.model.Server;
 import com.broadcom.springconsulting.integrationdemo.movit.application.port.in.PrepareRequestDownloadUseCase;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ class PrepareRequestDownloadService implements PrepareRequestDownloadUseCase {
         var servers = this.getAllInboundMachineInterfacesUseCase.execute( new GetAllInboundMachineInterfacesUseCase.GetAllInboundMachineInterfacesCommand() ).stream()
                 .map( mi -> new Server( mi.name(), mi.port() ) );
         var gateways = this.getAllOutboundMachineInterfacesUseCase.execute( new GetAllOutboundMachineInterfacesUseCase.GetAllOutboundMachineInterfacesCommand() ).stream()
-                .map( mi -> new Gateway( mi.name(), mi.port() ) );
+                .map( mi -> new MachineInterface( mi.name(), mi.port() ) );
 
         return Map.of( "servers", servers, "gateways", gateways );
     }
