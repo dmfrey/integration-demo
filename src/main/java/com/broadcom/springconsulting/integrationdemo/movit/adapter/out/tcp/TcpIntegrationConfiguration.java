@@ -8,9 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.context.IntegrationFlowContext;
-import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
-import org.springframework.integration.ip.tcp.outbound.TcpSendingMessageHandler;
-import org.springframework.integration.ip.tcp.serializer.ByteArrayLengthHeaderSerializer;
+import org.springframework.integration.ip.dsl.Tcp;
+import org.springframework.integration.ip.tcp.serializer.TcpCodecs;
 import org.springframework.integration.router.AbstractMessageRouter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -65,16 +64,24 @@ class TcpIntegrationConfiguration {
 
             var hostPortFlow = host + port  + ".flow";
 
-            var tcpConnectionFactory = new TcpNetClientConnectionFactory( host, port );
-            tcpConnectionFactory.setSerializer( new ByteArrayLengthHeaderSerializer( ByteArrayLengthHeaderSerializer.HEADER_SIZE_UNSIGNED_SHORT ) );
-
-            var tcpSendingMessageHandler = new TcpSendingMessageHandler();
-            tcpSendingMessageHandler.setConnectionFactory( tcpConnectionFactory );
-
-            IntegrationFlow flow = f -> f.handle( tcpSendingMessageHandler );
+//            var tcpConnectionFactory = new TcpNetClientConnectionFactory( host, port );
+//            tcpConnectionFactory.setSerializer( new ByteArrayLengthHeaderSerializer( ByteArrayLengthHeaderSerializer.HEADER_SIZE_UNSIGNED_SHORT ) );
+//
+//            var tcpSendingMessageHandler = new TcpSendingMessageHandler();
+//            tcpSendingMessageHandler.setConnectionFactory( tcpConnectionFactory );
+//
+//            IntegrationFlow flow = f -> f.handle( tcpSendingMessageHandler );
+            IntegrationFlow flow = f -> f
+                    .handle(
+                            Tcp.outboundGateway(
+                                    Tcp.nioClient( host, port )
+                                            .deserializer( TcpCodecs.lengthHeader1() )
+                                            .serializer( TcpCodecs.lengthHeader1() )
+                            )
+                    );
 
             return this.flowContext.registration( flow )
-                    .addBean( tcpConnectionFactory )
+//                    .addBean( tcpConnectionFactory )
                     .id( hostPortFlow )
                     .register();
         }

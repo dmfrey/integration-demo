@@ -36,12 +36,13 @@ class MovitController {
     @PostMapping( "/submit" )
     public String submitMovit( @ModelAttribute( "movitForm" ) MoveitForm moveitForm, Model model ) {
 
-        this.sendProgramUseCase.execute( new SendProgramUseCase.SendProgramCommand( moveitForm.getGatewayPort(), moveitForm.getFilename(), moveitForm.getServerPort() ) );
+        var downloadComplete = this.sendProgramUseCase.execute( new SendProgramUseCase.SendProgramCommand( moveitForm.getGatewayPort(), moveitForm.getFilename(), moveitForm.getServerPort() ) );
 
         var connections = this.prepareRequestDownloadUseCase.execute( new PrepareRequestDownloadUseCase.PrepareRequestDownloadCommand() );
+
         model.addAllAttributes( connections );
         model.addAttribute( "movitForm", new MovitController.MoveitForm() );
-        model.addAttribute( "message", "Download sent!" );
+        model.addAttribute( "message", downloadComplete.message() );
 
         return "movit";
     }

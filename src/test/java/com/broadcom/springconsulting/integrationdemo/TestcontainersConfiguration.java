@@ -8,8 +8,8 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.file.dsl.Files;
-import org.springframework.integration.ip.tcp.inbound.TcpReceivingChannelAdapter;
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory;
+import org.springframework.integration.ip.tcp.inbound.TcpReceivingChannelAdapter;
 import org.springframework.integration.ip.tcp.serializer.ByteArrayLengthHeaderSerializer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -83,6 +83,24 @@ public class TestcontainersConfiguration {
 
         return adapter;
     }
+
+//    @Bean
+//    IntegrationFlow port1234() {
+//
+//        return f -> f
+//                .handle(
+//                        Tcp.inboundGateway(
+//                                Tcp.nioServer(1234 )
+//                                        .deserializer( TcpCodecs.lengthHeader1() )
+//                                        .serializer( TcpCodecs.lengthHeader1() )
+//                                        .backlog( 30 )
+//                        )
+//                                .errorChannel( "tcpIn.errorChannel" )
+//                                .id( "tcpIn" )
+//                )
+//                .log( LoggingHandler.Level.INFO )
+//                .channel( "port1234OutputChannel.input" );
+//    }
 
     @Bean
     IntegrationFlow port1234OutputChannel() {

@@ -3,6 +3,7 @@ package com.broadcom.springconsulting.integrationdemo.movit.application.domain.s
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.Transformers;
 
 @Configuration( proxyBeanMethods = false )
 public class MovitIntegrationConfiguration {
@@ -23,6 +24,8 @@ public class MovitIntegrationConfiguration {
     IntegrationFlow movit() {
 
         return f -> f
+//                .split( Files.splitter() )
+                .transform( Transformers.fromStream() )
                 .routeToRecipients(r -> r
                         .recipient( "sendsftp.input", "headers['send-channel'] == 'SFTP'" )
                         .recipient( "sendsmb.input", "headers['send-channel'] == 'SMB'" )
